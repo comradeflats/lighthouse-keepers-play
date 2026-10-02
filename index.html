@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lighthouse Keepers</title>
+<meta name="description" content="Keep the light burning for thirteen nights until the Great Storm passes. A cozy pixel-art island game with some danger, playable in your browser.">
+<meta property="og:title" content="Lighthouse Keepers">
+<meta property="og:description" content="Keep the light burning for thirteen nights until the Great Storm passes. Play free in your browser.">
+<meta property="og:image" content="img/card.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect x='6' y='1' width='4' height='2' fill='%23b8443a'/%3E%3Crect x='5' y='3' width='6' height='3' fill='%23ffd66e'/%3E%3Crect x='6' y='6' width='4' height='3' fill='%23ebe6d9'/%3E%3Crect x='6' y='9' width='4' height='3' fill='%23b8443a'/%3E%3Crect x='5' y='12' width='6' height='3' fill='%23ebe6d9'/%3E%3C/svg%3E">
+<style>
+@font-face { font-family: "Keeper"; src: url("fonts/Keeper.ttf") format("truetype"); font-display: swap; }
+:root {
+  --night: #070b1a; --deep: #0d1430; --panel: #121a38; --ink: #eef0f5; --soft: #b6bdd2;
+  --gold: #ffd66e; --amber: #e0a33a; --red: #c4523f; --paper: #eadcb8; --paper-ink: #2a1c12; --sea: #6ab0d0;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--night); color: var(--ink); font: 17px/1.6 -apple-system, "Segoe UI", "Avenir Next", "Noto Sans", sans-serif; }
+img { max-width: 100%; display: block; image-rendering: pixelated; }
+a { color: var(--gold); }
+.pix { font-family: "Keeper", monospace; letter-spacing: .02em; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+/* hero: the island at night, full width */
+.hero { position: relative; min-height: min(92vh, 760px); display: flex; align-items: flex-end; overflow: hidden; }
+.hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 60%; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,11,26,.0) 30%, rgba(7,11,26,.55) 62%, var(--night) 100%), linear-gradient(90deg, rgba(7,11,26,.75), rgba(7,11,26,0) 55%); }
+.hero .wrap { position: relative; z-index: 1; padding-bottom: 56px; width: 100%; }
+.eyebrow { color: var(--gold); font-size: 15px; text-transform: uppercase; letter-spacing: .14em; margin: 0 0 6px; }
+h1 { font-size: clamp(44px, 8vw, 92px); line-height: 1; margin: 0 0 14px; text-shadow: 4px 4px 0 rgba(0,0,0,.5); }
+.lede { max-width: 560px; color: #dfe3ee; font-size: 19px; margin: 0 0 26px; }
+.cta { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.btn { display: inline-block; font-family: "Keeper", monospace; font-size: 26px; text-decoration: none; color: var(--paper-ink);
+  background: var(--amber); padding: 12px 28px; border: 3px solid #3a2408; box-shadow: inset 0 3px 0 #ffe08a, inset 0 -4px 0 #8a5a1a, 0 6px 0 rgba(0,0,0,.35); }
+.btn:hover, .btn:focus-visible { background: #f4bc52; outline: none; transform: translateY(-1px); }
+.link { font-family: "Keeper", monospace; font-size: 19px; color: var(--soft); text-decoration: none; border-bottom: 2px solid transparent; }
+.link:hover { color: var(--gold); border-color: var(--gold); }
+.note { color: var(--soft); font-size: 14px; margin-top: 14px; }
+
+/* language switch */
+.lang { position: absolute; top: 18px; right: 20px; z-index: 2; display: flex; gap: 6px; }
+.lang button { font-family: "Keeper", monospace; font-size: 16px; background: rgba(7,11,26,.6); color: var(--soft); border: 2px solid #3a4458; padding: 4px 10px; cursor: pointer; }
+.lang button[aria-pressed="true"] { color: var(--gold); border-color: var(--gold); }
+
+section { padding: 72px 0 24px; }
+h2 { font-family: "Keeper", monospace; font-size: clamp(30px, 4vw, 42px); margin: 0 0 10px; color: var(--ink); }
+.sub { color: var(--soft); max-width: 640px; margin: 0 0 32px; }
+
+/* features: alternating picture and words */
+.feature { display: grid; grid-template-columns: 1.25fr 1fr; gap: 34px; align-items: center; margin-bottom: 54px; }
+.feature:nth-child(even) .shot { order: 2; }
+.shot { border: 4px solid #1a1008; box-shadow: 0 0 0 3px #7a4e2c, 0 10px 30px rgba(0,0,0,.5); background: #000; }
+.feature h3 { font-family: "Keeper", monospace; font-size: 26px; margin: 0 0 8px; color: var(--gold); }
+.feature p { margin: 0; color: #d7dbe6; }
+
+/* islands: parchment cards */
+.isles { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+.isle { background: var(--paper); color: var(--paper-ink); padding: 16px 18px; border: 3px solid #3a2614; box-shadow: inset 0 2px 0 #f6ecd2, 0 6px 0 rgba(0,0,0,.35); }
+.isle h3 { font-family: "Keeper", monospace; color: #7a2e14; margin: 0; font-size: 23px; }
+.isle .tag { font-family: "Keeper", monospace; color: #6a5034; font-size: 15px; margin-bottom: 6px; }
+.isle p { margin: 0; font-size: 15.5px; line-height: 1.5; }
+.isle.locked { background: #2a2436; color: #c9c2d8; border-color: #110d18; box-shadow: inset 0 2px 0 #3d3550, 0 6px 0 rgba(0,0,0,.35); }
+.isle.locked h3 { color: var(--gold); }
+.isle.locked .tag { color: #9a90b0; }
+
+/* controls */
+.keys { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px 26px; }
+.key { display: flex; gap: 12px; align-items: baseline; }
+kbd { font-family: "Keeper", monospace; min-width: 44px; text-align: center; background: var(--panel); border: 2px solid #3a4458; border-bottom-width: 4px; padding: 2px 8px; color: var(--gold); font-size: 16px; white-space: nowrap; }
+
+.band { background: linear-gradient(180deg, var(--night), var(--deep)); }
+footer { padding: 48px 0 60px; color: var(--soft); font-size: 14px; border-top: 1px solid #1c2448; margin-top: 40px; }
+
+@media (max-width: 760px) {
+  .feature { grid-template-columns: 1fr; gap: 16px; }
+  .feature:nth-child(even) .shot { order: 0; }
+  .hero { min-height: 82vh; }
+}
+[data-ru] { display: none; }
+html[lang="ru"] [data-en] { display: none; }
+html[lang="ru"] [data-ru] { display: revert; }
+</style>
+<!-- start downloading the game while the page is read, so Play starts sooner -->
+<link rel="prefetch" href="play/index.wasm">
+<link rel="prefetch" href="play/index.pck">
+<link rel="prefetch" href="play/index.js">
+</head>
+<body>
+
+<header class="hero">
+  <img src="img/hero.png" alt="A red and white lighthouse at night, its beam sweeping over a sleeping village and a calm sea." width="960" height="540">
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-set="en" aria-pressed="true">EN</button>
+    <button type="button" data-set="ru" aria-pressed="false">RU</button>
+  </div>
+  <div class="wrap">
+    <p class="eyebrow pix"><span data-en>A season of 13 nights</span><span data-ru>Сезон из 13 ночей</span></p>
+    <h1 class="pix"><span data-en>Lighthouse Keepers</span><span data-ru>Смотрители маяка</span></h1>
+    <p class="lede">
+      <span data-en>Keep the light burning until the Great Storm passes. A brighter lamp guides more ships to your jetty, and draws more of the things that live under the tide.</span>
+      <span data-ru>Не дайте свету погаснуть, пока не пройдёт Великий шторм. Чем ярче лампа, тем больше кораблей приходит к вашей пристани — и тем больше тварей поднимается из-под прилива.</span>
+    </p>
+    <div class="cta">
+      <a class="btn" href="play/"><span data-en>▶ Play in your browser</span><span data-ru>▶ Играть в браузере</span></a>
+      <a class="link" href="#about"><span data-en>What is it?</span><span data-ru>Что это за игра?</span></a>
+    </div>
+    <p class="note"><span data-en>Free · keyboard · desktop browsers · about 40 minutes a season</span><span data-ru>Бесплатно · клавиатура · браузер на компьютере · около 40 минут за сезон</span></p>
+  </div>
+</header>
+
+<section id="about" class="wrap">
+  <h2><span data-en>Cozy, with some danger</span><span data-ru>Уютно, но с опасностью</span></h2>
+  <p class="sub">
+    <span data-en>Chop timber, cut peat, welcome castaways and build up a little harbour village by day. When the sun goes down, the lamp burns your oil and the brinelings come up with the tide.</span>
+    <span data-ru>Днём рубите лес, режьте торф, принимайте потерпевших и отстраивайте деревушку у гавани. Когда садится солнце, лампа жжёт ваше масло, а с приливом выходят рассольники.</span>
+  </p>
+
+  <div class="feature">
+    <img class="shot" src="img/dusk.png" alt="Dusk over the village, villagers gathered by the campfire as the lighthouse lights up." loading="lazy" width="960" height="540">
+    <div>
+      <h3><span data-en>Days of building</span><span data-ru>Дни стройки</span></h3>
+      <p><span data-en>Every newcomer has a trade: fisher, woodcutter, mason, harpooner, bell-ringer or sailor. Raise walls and harpoon towers, a fish-oil hut and a stone pit, cottages to house them, and a workshop for storm lanterns, boathooks and signal flares.</span>
+      <span data-ru>У каждого новичка своё ремесло: рыбак, дровосек, каменщик, гарпунщик, звонарь или моряк. Ставьте стены и гарпунные башни, хижину ворвани и карьер, домики для жителей и мастерскую для штормовых фонарей, багров и сигнальных ракет.</span></p>
+    </div>
+  </div>
+
+  <div class="feature">
+    <img class="shot" src="img/night_fight.png" alt="Brinelings, a shellback and a huge tidewyrm come ashore at night toward the lit lighthouse." loading="lazy" width="960" height="540">
+    <div>
+      <h3><span data-en>Nights of holding on</span><span data-ru>Ночи обороны</span></h3>
+      <p><span data-en>Brinelings drink the lamp oil and crack the tower. Gloomgulls peck at the lamp, tunnel crabs dig under your walls, a siren sings your islanders into the sea, and spring tides bring them in waves, and on the thirteenth night the Great Storm brings two tidewyrms.</span>
+      <span data-ru>Рассольники пьют масло лампы и крошат башню. Мрачные чайки клюют лампу, туннельные крабы роют под стенами, сирена уводит островитян в море, большие приливы гонят их волнами, а на тринадцатую ночь Великий шторм приносит двух приливных змеев.</span></p>
+    </div>
+  </div>
+
+  <div class="feature">
+    <img class="shot" src="img/aurora.png" alt="An aurora shimmers over Northlight at night." loading="lazy" width="960" height="540">
+    <div>
+      <h3><span data-en>A different sky every day</span><span data-ru>Каждый день — другое небо</span></h3>
+      <p><span data-en>Clear mornings, high cloud, haze, golden evenings, squalls out on the horizon, moon phases and the odd aurora. Ships and birds cross the horizon, and far out another lighthouse blinks three short, one long.</span>
+      <span data-ru>Ясные утра, высокие облака, дымка, золотые вечера, шквалы на горизонте, фазы луны и порой северное сияние. По горизонту идут корабли и птицы, а вдали мигает другой маяк: трижды коротко, раз долго.</span></p>
+    </div>
+  </div>
+
+  <div class="feature">
+    <img class="shot" src="img/play.png" alt="The game's interface: supplies, lamp brightness, the guide card and a request from the mail packet." loading="lazy" width="960" height="540">
+    <div>
+      <h3><span data-en>Something new every season</span><span data-ru>Каждый сезон по-новому</span></h3>
+      <p><span data-en>Undercurrents like drought, lean waters and cold snaps change the rules for a few days. Ships send requests with deadlines. Strange quiet nights ask you to choose. A guide walks you through your first two days.</span>
+      <span data-ru>Подводные течения — засуха, скудные воды, заморозки — меняют правила на несколько дней. Корабли присылают просьбы со сроками. Тихие ночи ставят перед выбором. Первые два дня вас ведут подсказки.</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <h2><span data-en>The islands</span><span data-ru>Острова</span></h2>
+    <p class="sub"><span data-en>Each island keeps its character; where everything lies changes every season.</span><span data-ru>У каждого острова свой нрав, а расположение всего меняется каждый сезон.</span></p>
+    <div class="isles">
+      <div class="isle"><h3><span data-en>Gullhaven</span><span data-ru>Чаячья Гавань</span></h3><div class="tag"><span data-en>A gentle harbour isle</span><span data-ru>Мирный гаванный остров</span></div>
+        <p><span data-en>Two wide beaches and thick woods. Kind currents bring castaways often. A good first season.</span><span data-ru>Два широких пляжа и густые леса. Добрые течения часто приносят потерпевших. Хорошо для первого сезона.</span></p></div>
+      <div class="isle"><h3><span data-en>Kelda’s Tooth</span><span data-ru>Зуб Кельды</span></h3><div class="tag"><span data-en>A sheer granite fang</span><span data-ru>Отвесный гранитный клык</span></div>
+        <p><span data-en>Stone everywhere and hardly a tree. Timber comes from wrecks, driftwood and the chandlery.</span><span data-ru>Камень повсюду, а деревьев почти нет. Древесину дают обломки, плавник и лавка.</span></p></div>
+      <div class="isle"><h3><span data-en>Fennick Holm</span><span data-ru>Фенников Холм</span></h3><div class="tag"><span data-en>A fog-bound marsh</span><span data-ru>Болото в тумане</span></div>
+        <p><span data-en>Peat on both roads, but the fish run thin. Fog banks and sirens are common.</span><span data-ru>Торф на обеих дорогах, но рыбы мало. Здесь часты туманы и сирены.</span></p></div>
+      <div class="isle"><h3><span data-en>Wreckers’ Reach</span><span data-ru>Плёс Мародёров</span></h3><div class="tag"><span data-en>A reef-ringed coast</span><span data-ru>Берег в кольце рифов</span></div>
+        <p><span data-en>Twice the shipping and frequent distress calls. On a dim lamp, ships founder on the reef.</span><span data-ru>Вдвое больше кораблей и частые сигналы бедствия. При тусклой лампе корабли разбиваются о риф.</span></p></div>
+      <div class="isle"><h3><span data-en>Northlight</span><span data-ru>Северный Свет</span></h3><div class="tag"><span data-en>An island under the aurora</span><span data-ru>Остров под северным сиянием</span></div>
+        <p><span data-en>Long, cold nights. Every cottage burns a piece of wood each night to keep warm.</span><span data-ru>Долгие холодные ночи. Каждый домик сжигает за ночь по полену, чтобы не замёрзнуть.</span></p></div>
+      <div class="isle locked"><h3><span data-en>???</span><span data-ru>???</span></h3><div class="tag"><span data-en>Where the signal comes from</span><span data-ru>Откуда идёт сигнал</span></div>
+        <p><span data-en>Find every page of the old log to put it on the chart.</span><span data-ru>Найдите все страницы старого журнала, чтобы нанести его на карту.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap">
+  <h2><span data-en>How to play</span><span data-ru>Управление</span></h2>
+  <div class="keys">
+    <div class="key"><kbd>← →</kbd><span><span data-en>walk (Shift to run)</span><span data-ru>идти (Shift — бежать)</span></span></div>
+    <div class="key"><kbd>↓</kbd><span><span data-en>act: hold to chop, build, mend</span><span data-ru>действие: удерживать — рубить, строить, чинить</span></span></div>
+    <div class="key"><kbd>↑</kbd><span><span data-en>swing your lantern, or climb the tower</span><span data-ru>взмах фонарём или подъём на башню</span></span></div>
+    <div class="key"><kbd>J</kbd><span><span data-en>the keeper’s journal</span><span data-ru>журнал смотрителя</span></span></div>
+    <div class="key"><kbd>Q · E</kbd><span><span data-en>signal flare · hand bell</span><span data-ru>ракета · ручной колокол</span></span></div>
+    <div class="key"><kbd>Tab</kbd><span><span data-en>fold or open the cards</span><span data-ru>свернуть или открыть карточки</span></span></div>
+    <div class="key"><kbd>Z</kbd><span><span data-en>zoom</span><span data-ru>масштаб</span></span></div>
+    <div class="key"><kbd>Esc</kbd><span><span data-en>pause, language, music</span><span data-ru>пауза, язык, музыка</span></span></div>
+  </div>
+  <p style="margin-top:34px"><a class="btn" href="play/"><span data-en>▶ Play now</span><span data-ru>▶ Играть</span></a></p>
+</section>
+
+<footer class="wrap">
+  <p><span data-en>Lighthouse Keepers is made with</span><span data-ru>Смотрители маяка сделаны на</span> <a href="https://godotengine.org">Godot</a>. <span data-en>Music and sound are generated in the game. The pixel font, Keeper, was drawn for the game.</span><span data-ru>Музыка и звуки создаются прямо в игре. Пиксельный шрифт Keeper нарисован специально для игры.</span></p>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem("lk-site-lang"); } catch (e) {}
+  var lang = saved || ((navigator.language || "").toLowerCase().indexOf("ru") === 0 ? "ru" : "en");
+  function set(l) {
+    root.lang = l;
+    document.title = l === "ru" ? "Смотрители маяка" : "Lighthouse Keepers";
+    document.querySelectorAll(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.set === l)); });
+    try { localStorage.setItem("lk-site-lang", l); } catch (e) {}
+  }
+  document.querySelectorAll(".lang button").forEach(function (b) { b.addEventListener("click", function () { set(b.dataset.set); }); });
+  set(lang);
+})();
+</script>
+</body>
+</html>
